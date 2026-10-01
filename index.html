@@ -1,86 +1,676 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой тестовый сайт</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0E13">
+<title>Stanislav Kholodov</title>
+<meta name="description" content="Freelance Flutter and Godot developer. Cross-platform apps, training simulators and games for B2B teams, with AI integration.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: blueprint-dark single page — live sim viewport in the hero, bento of services, case grid, real process sequence, brief builder. Committed dark look. */
+:root{
+  --bg:#0A0E13;
+  --surface:#11171F;
+  --surface-2:#18212C;
+  --line:#243140;
+  --fg:#E7ECF2;
+  --muted:#8E9AAA;
+  --accent:#FFB443;
+  --accent-ink:#1C1306;
+  --cool:#62C6E0;
+  --grid:rgba(98,198,224,.06);
+  --glow:rgba(255,180,67,.10);
 
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #4f46e5, #9333ea);
-      color: #1f2937;
-      padding: 16px;
-    }
+  --f-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-    .card {
-      background: #ffffff;
-      max-width: 480px;
-      width: 100%;
-      padding: 40px 32px;
-      border-radius: 16px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-      text-align: center;
-    }
+  --r:14px;
+  --wrap:1180px;
+  --gutter:clamp(16px, 4vw, 40px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--bg);color:var(--fg);
+  font-family:var(--f-body);font-size:1.0625rem;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--gutter)}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.05;letter-spacing:-.02em}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono)}
 
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 12px;
-    }
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+  background:rgba(10,14,19,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-mono);font-size:.8rem;font-weight:500}
+.nav-links{display:flex;gap:28px;font-size:.95rem}
+.nav-links a{text-decoration:none;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font:600 .95rem/1 var(--f-body);text-decoration:none;cursor:pointer;
+  padding:12px 18px;border-radius:999px;border:1px solid transparent;
+  transition:transform .15s, background .2s, border-color .2s;
+}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{transform:translateY(-1px);background:#FFC266}
+.btn-ghost{border-color:var(--line);color:var(--fg);background:transparent}
+.btn-ghost:hover{border-color:var(--muted)}
+@media (max-width:820px){.nav-links{display:none}}
+@media (max-width:420px){.nav .btn{padding:10px 14px;font-size:.88rem}}
+@media (max-width:380px){.brand-name{display:none}}
 
-    p {
-      line-height: 1.6;
-      color: #4b5563;
-      margin-bottom: 24px;
-    }
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;
+  background:
+    radial-gradient(60% 60% at 80% 30%, var(--glow), transparent 70%),
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/48px 48px;
+  border-bottom:1px solid var(--line);
+}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;padding-block:clamp(48px,8vw,104px)}
+.hero-copy{min-width:0;display:grid;gap:24px}
+.status{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-mono);font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;width:fit-content;background:var(--surface)}
+.status i{width:8px;height:8px;border-radius:50%;background:#5BD08C;box-shadow:0 0 0 4px rgba(91,208,140,.15)}
+.hero h1{font-size:clamp(2.6rem,6.2vw,5.1rem);font-weight:800;line-height:.98;letter-spacing:-.035em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--muted);font-size:clamp(1.05rem,1.4vw,1.2rem);max-width:56ch}
+.lede strong{color:var(--fg);font-weight:600}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+.hero-facts{display:flex;flex-wrap:wrap;gap:10px 28px;font-family:var(--f-mono);font-size:.82rem;color:var(--muted);padding-top:8px;border-top:1px dashed var(--line)}
+.hero-facts b{color:var(--fg);font-weight:500}
 
-    button {
-      background: #4f46e5;
-      color: #ffffff;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+.viewport{
+  position:relative;min-width:0;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  background:#0C1219;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.02) inset;
+}
+.vp-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface);font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.vp-bar .dots{display:flex;gap:6px}
+.vp-bar .dots span{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.vp-file{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vp-file b{color:var(--fg);font-weight:500}
+.vp-stage{position:relative;aspect-ratio:4/3;max-width:100%}
+#sim{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);background:rgba(12,18,25,.82);border:1px solid var(--line);border-radius:8px;padding:6px 9px;line-height:1.5;pointer-events:none;font-variant-numeric:tabular-nums}
+.hud b{color:var(--accent);font-weight:500}
+.hud .c{color:var(--cool)}
+.hud-tl{top:12px;left:12px}
+.hud-tr{top:12px;right:12px;text-align:right}
+.hud-bl{bottom:12px;left:12px}
+.tree{white-space:pre}
+@media (max-width:960px){.hero .wrap{grid-template-columns:1fr}}
+@media (max-width:460px){.hud-tl{display:none}.vp-stage{aspect-ratio:1/1}}
 
-    button:hover {
-      background: #4338ca;
-    }
+/* ---------- Sections ---------- */
+section{scroll-margin-top:72px}
+.section{padding-block:clamp(64px,9vw,120px)}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px 48px;align-items:end;margin-bottom:clamp(32px,5vw,56px)}
+.section-head h2{font-size:clamp(2rem,4.2vw,3.25rem);font-weight:700}
+.section-head p{color:var(--muted);max-width:52ch}
+.section-head .eyebrow{grid-column:1/-1;margin-bottom:-8px}
+@media (max-width:760px){.section-head{grid-template-columns:1fr}}
 
-    #counter {
-      margin-top: 20px;
-      font-size: 0.95rem;
-      color: #6b7280;
-    }
-  </style>
+/* ---------- Bento ---------- */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.cell{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:clamp(20px,2.4vw,28px);min-width:0;display:flex;flex-direction:column;gap:16px;
+  transition:border-color .25s, transform .25s;
+}
+.cell:hover{border-color:#33465A}
+.span-3{grid-column:span 3}.span-4{grid-column:span 4}.span-2{grid-column:span 2}
+.cell h3{font-size:clamp(1.5rem,2.4vw,2rem);font-weight:700}
+.cell p{color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--cool)}
+.tag::before{content:"";width:6px;height:6px;border-radius:2px;background:currentColor}
+.tag.amber{color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--f-mono);font-size:.76rem;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--fg);background:var(--surface-2)}
+.code{
+  margin-top:auto;font-family:var(--f-mono);font-size:.8rem;line-height:1.65;
+  background:#0B1016;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  overflow-x:auto;white-space:pre;color:#B9C4D2;
+}
+.code .k{color:var(--cool)}.code .s{color:var(--accent)}.code .c{color:#5E6B7B}.code .f{color:#E7ECF2}
+.stat{justify-content:space-between}
+.stat .num{font-family:var(--f-display);font-weight:800;font-size:clamp(3rem,6vw,4.6rem);line-height:.9;letter-spacing:-.04em;color:var(--fg)}
+.stat .num sup{font-size:.45em;color:var(--accent);vertical-align:.9em;margin-left:2px}
+.stat .lbl{font-size:.95rem;color:var(--muted)}
+.ai-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 24px;margin:0;padding:0;list-style:none}
+.ai-list li{display:grid;gap:2px;padding-left:16px;border-left:2px solid var(--line)}
+.ai-list b{font-weight:600;color:var(--fg);font-size:.98rem}
+.ai-list span{color:var(--muted);font-size:.9rem}
+.sectors{display:flex;flex-wrap:wrap;gap:8px}
+.sectors .chip{background:transparent;font-family:var(--f-body);font-size:.9rem}
+@media (max-width:960px){.span-3,.span-4,.span-2{grid-column:span 3}.span-4.wide{grid-column:span 6}}
+@media (max-width:640px){.bento{grid-template-columns:1fr}.span-3,.span-4,.span-2,.span-4.wide{grid-column:auto}.ai-list{grid-template-columns:1fr}}
+
+/* ---------- Stack strip ---------- */
+.stack{border-block:1px solid var(--line);background:var(--surface)}
+.stack .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding-block:22px}
+.stack .eyebrow{flex:0 0 auto}
+.stack ul{display:flex;flex-wrap:wrap;gap:8px 22px;margin:0;padding:0;list-style:none;font-family:var(--f-mono);font-size:.86rem;color:var(--fg)}
+.stack li::before{content:"/ ";color:var(--line)}
+
+/* ---------- Work ---------- */
+.work{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.case{
+  position:relative;display:grid;gap:18px;align-content:start;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:clamp(22px,2.6vw,32px);min-width:0;overflow:hidden;
+  transition:border-color .25s, transform .25s;
+}
+.case:hover{border-color:#33465A;transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.case:hover{transform:none}}
+.case-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.case-sector{font-family:var(--f-mono);font-size:.76rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.case h3{font-size:clamp(1.35rem,2vw,1.7rem);font-weight:700}
+.case p{color:var(--muted)}
+.metric{display:flex;align-items:baseline;gap:12px;padding-top:18px;border-top:1px dashed var(--line)}
+.metric b{font-family:var(--f-display);font-weight:800;font-size:2.2rem;letter-spacing:-.03em;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+.metric span{color:var(--muted);font-size:.92rem}
+@media (max-width:760px){.work{grid-template-columns:1fr}}
+
+/* ---------- Process ---------- */
+.process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.step{padding:clamp(22px,2.4vw,30px);display:grid;gap:12px;align-content:start;border-right:1px solid var(--line);min-width:0}
+.step:last-child{border-right:0}
+.step-n{font-family:var(--f-mono);font-size:.8rem;color:var(--accent)}
+.step h3{font-size:1.3rem;font-weight:700}
+.step p{color:var(--muted);font-size:.95rem}
+.step .dur{font-family:var(--f-mono);font-size:.76rem;color:var(--cool);margin-top:4px}
+@media (max-width:900px){.process{grid-template-columns:repeat(2,minmax(0,1fr))}.step:nth-child(2){border-right:0}.step:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+@media (max-width:560px){.process{grid-template-columns:1fr}.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}}
+
+/* ---------- Engagement ---------- */
+.models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.model{border:1px solid var(--line);border-radius:var(--r);padding:24px;display:grid;gap:10px;align-content:start;min-width:0}
+.model h3{font-size:1.2rem;font-weight:700}
+.model p{color:var(--muted);font-size:.95rem}
+.model .fit{font-family:var(--f-mono);font-size:.76rem;color:var(--muted);margin-top:6px}
+.model.featured{border-color:rgba(255,180,67,.45);background:linear-gradient(180deg, rgba(255,180,67,.06), transparent 60%)}
+@media (max-width:860px){.models{grid-template-columns:1fr}}
+
+/* ---------- Contact ---------- */
+.contact{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.brief{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:clamp(22px,3vw,36px);display:grid;gap:22px;min-width:0}
+.brief h3{font-size:1.5rem;font-weight:700}
+fieldset{border:0;margin:0;padding:0;display:grid;gap:10px;min-width:0}
+legend{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-block;padding:9px 14px;border-radius:999px;border:1px solid var(--line);font-size:.92rem;cursor:pointer;transition:all .15s;color:var(--fg);background:var(--surface-2)}
+.opt input:checked + span{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.opt input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px}
+textarea{width:100%;min-height:110px;resize:vertical;background:#0B1016;border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--fg);font:inherit;font-size:.98rem}
+textarea:focus{outline:none;border-color:var(--accent)}
+.brief-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.toast{font-family:var(--f-mono);font-size:.8rem;color:#5BD08C}
+.direct{display:grid;gap:12px;align-content:start;min-width:0}
+.channel{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;min-width:0}
+.channel div{min-width:0}
+.channel .eyebrow{display:block;margin-bottom:4px}
+.channel .val{font-family:var(--f-mono);font-size:.95rem;user-select:all;overflow-wrap:anywhere}
+.channel a.val{text-decoration:none}
+.channel a.val:hover{color:var(--accent)}
+.copy{flex:0 0 auto;font:500 .8rem/1 var(--f-mono);padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.copy:hover{border-color:var(--muted)}
+.note{color:var(--muted);font-size:.9rem;padding:4px 4px 0}
+@media (max-width:900px){.contact{grid-template-columns:1fr}}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:28px;font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+</style>
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-  <main class="card">
-    <h1>Привет, GitHub Pages! 👋</h1>
-    <p>Если вы видите эту страницу по адресу <code>github.io</code>, значит сайт успешно опубликован.</p>
-    <button id="btn">Нажми меня</button>
-    <div id="counter">Нажатий: 0</div>
-  </main>
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Stanislav Kholodov, home">
+      <span class="brand-mark">SK</span>
+      <span class="brand-name">Stanislav Kholodov</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn btn-primary" href="#contact">Start a project</a>
+  </div>
+</header>
 
-  <script>
-    let count = 0;
-    const counter = document.getElementById('counter');
+<main id="top">
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="status"><i></i>Available for new projects · Q4 2026</span>
+      <h1>Flutter apps and <em>Godot simulators</em> for business.</h1>
+      <p class="lede">I'm Stanislav Kholodov, a freelance developer with <strong>10+ years</strong> of shipping cross-platform apps, training simulators and games for <strong>B2B teams</strong>. I add AI where it saves your people real time, not as a gimmick.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#contact">Discuss your project →</a>
+        <a class="btn btn-ghost" href="#work">See selected work</a>
+      </div>
+      <div class="hero-facts">
+        <span><b>Flutter</b> iOS · Android · Web · Desktop</span>
+        <span><b>Godot 4</b> GDScript · C#</span>
+        <span><b>AI</b> LLM · RAG · on-device ML</span>
+      </div>
+    </div>
 
-    document.getElementById('btn').addEventListener('click', () => {
-      count++;
-      counter.textContent = 'Нажатий: ' + count;
+    <figure class="viewport" style="margin:0" aria-label="Live demo: a warehouse fleet simulation running in the browser">
+      <div class="vp-bar">
+        <span class="dots"><span></span><span></span><span></span></span>
+        <span class="vp-file">res://scenes/<b>warehouse_fleet.tscn</b></span>
+        <span>▶ Running</span>
+      </div>
+      <div class="vp-stage">
+        <canvas id="sim" aria-hidden="true"></canvas>
+        <div class="hud hud-tl tree">Main <span class="c">(Node2D)</span>
+ ├ Floor <span class="c">(TileMap)</span>
+ ├ Route <span class="c">(Path2D)</span>
+ └ Fleet <span class="c">× <span id="hud-n">28</span> AGV</span></div>
+        <div class="hud hud-tr">FPS <b id="hud-fps">60</b><br><span id="hud-ms">16.7</span> ms / frame</div>
+        <div class="hud hud-bl">physics <span class="c">60 Hz</span> · steering + avoidance</div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ STACK ============ -->
+<div class="stack">
+  <div class="wrap">
+    <span class="eyebrow">Daily stack</span>
+    <ul>
+      <li>Flutter / Dart</li><li>Riverpod · Bloc</li><li>Firebase</li><li>Godot 4</li><li>GDScript · C#</li>
+      <li>OpenAI · Claude · Gemini APIs</li><li>TensorFlow Lite · ML Kit</li><li>Codemagic · GitHub Actions</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Services</span>
+      <h2>One developer for the app, the simulator and the AI layer.</h2>
+      <p>You work directly with the person who writes the code. No account managers, no handoffs between agencies, and one codebase per product wherever possible.</p>
+    </div>
+
+    <div class="bento">
+      <article class="cell span-3">
+        <span class="tag">Mobile · Web · Desktop</span>
+        <h3>Flutter applications</h3>
+        <p>Customer apps, internal tools and field-staff apps from one Dart codebase. Offline-first sync, ERP and CRM integrations, store release and long-term maintenance.</p>
+        <div class="chips"><span class="chip">iOS</span><span class="chip">Android</span><span class="chip">Web</span><span class="chip">Windows</span><span class="chip">macOS</span><span class="chip">Linux</span></div>
+<pre class="code"><span class="k">class</span> <span class="f">OrdersScreen</span> <span class="k">extends</span> ConsumerWidget {
+  <span class="c">// offline queue, synced to your ERP</span>
+  Widget build(ctx, ref) =&gt; OrderList(
+    source: ref.watch(<span class="s">ordersProvider</span>),
+  );
+}</pre>
+      </article>
+
+      <article class="cell span-3">
+        <span class="tag amber">Training · Digital twins · Games</span>
+        <h3>Godot simulators &amp; games</h3>
+        <p>Equipment and safety training simulators, process digital twins and branded games. Realistic physics, scoring and reporting, running on ordinary office PCs, tablets or in the browser.</p>
+        <div class="chips"><span class="chip">Godot 4</span><span class="chip">3D &amp; 2D</span><span class="chip">VR-ready</span><span class="chip">HTML5 export</span></div>
+<pre class="code"><span class="k">func</span> <span class="f">_physics_process</span>(delta):
+    <span class="c"># score every safety violation</span>
+    <span class="k">if</span> load.tilt &gt; <span class="s">MAX_TILT</span>:
+        report.add(<span class="s">"unsafe_lift"</span>, delta)
+    move_and_slide()</pre>
+      </article>
+
+      <article class="cell span-4 wide">
+        <span class="tag">AI integration</span>
+        <h3>AI inside your product</h3>
+        <ul class="ai-list">
+          <li><b>Assistants on your data</b><span>RAG over manuals, policies and tickets</span></li>
+          <li><b>On-device vision</b><span>Defect checks and document scanning offline</span></li>
+          <li><b>Voice and text input</b><span>Speech-to-form for staff with busy hands</span></li>
+          <li><b>Adaptive simulators</b><span>AI trainees, debriefs and difficulty tuning</span></li>
+        </ul>
+      </article>
+
+      <article class="cell span-2 stat">
+        <span class="eyebrow">In production</span>
+        <div class="num">10<sup>+</sup></div>
+        <span class="lbl">years building and shipping commercial software</span>
+      </article>
+
+      <article class="cell span-2 stat">
+        <span class="eyebrow">Codebase</span>
+        <div class="num">1<sup>→6</sup></div>
+        <span class="lbl">platforms from one Flutter project</span>
+      </article>
+
+      <article class="cell span-4 wide">
+        <span class="tag amber">Who I work with</span>
+        <p>Companies that need software their staff and partners use every day.</p>
+        <div class="sectors">
+          <span class="chip">Logistics &amp; warehousing</span><span class="chip">Manufacturing</span><span class="chip">Industrial training</span>
+          <span class="chip">Field service</span><span class="chip">Wholesale &amp; retail</span><span class="chip">HealthTech</span><span class="chip">Agencies (white-label)</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WORK (placeholder case studies: replace with real projects) ============ -->
+<section class="section" id="work" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Selected work</span>
+      <h2>Projects measured by business results.</h2>
+      <p>Most client work is under NDA, so details are generalized. Full case studies and demos are available on a call.</p>
+    </div>
+
+    <div class="work">
+      <article class="case">
+        <div class="case-top"><span class="case-sector">Manufacturing</span><span class="tag amber">Godot 4</span></div>
+        <h3>Forklift operator training simulator</h3>
+        <p>Physics-based forklift with load stability, pedestrian zones and automatic scoring of every safety violation. Runs on standard office PCs with a gamepad or a steering wheel.</p>
+        <div class="metric"><b>−40%</b><span>on-site training hours</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top"><span class="case-sector">Field service</span><span class="tag">Flutter + LLM</span></div>
+        <h3>Technician app with an AI assistant</h3>
+        <p>Engineers ask questions about equipment manuals in plain language and get answers with page references. On-device photo checks flag common defects without a signal.</p>
+        <div class="metric"><b>2×</b><span>faster first-time fixes</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top"><span class="case-sector">Logistics</span><span class="tag amber">Godot 4</span></div>
+        <h3>Warehouse digital twin</h3>
+        <p>Simulates AGV routes, picker paths and peak loads before a layout change, so operations can compare options on screen instead of on the floor.</p>
+        <div class="metric"><b>3</b><span>layout variants tested before rebuild</span></div>
+      </article>
+
+      <article class="case">
+        <div class="case-top"><span class="case-sector">Wholesale</span><span class="tag">Flutter</span></div>
+        <h3>B2B ordering app for dealers</h3>
+        <p>Catalog with dealer-specific pricing, offline orders that sync to the ERP, and push alerts for stock changes. iOS, Android and a web version from one codebase.</p>
+        <div class="metric"><b>60%</b><span>of dealer orders moved to the app</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section class="section" id="process" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How we work</span>
+      <h2>From first call to release in four steps.</h2>
+      <p>You see working builds every week. Scope, budget and risks are agreed in writing before development starts.</p>
+    </div>
+
+    <div class="process">
+      <div class="step">
+        <span class="step-n">01</span>
+        <h3>Discovery</h3>
+        <p>A call about your goals, users and existing systems. You get a written scope, timeline and fixed quote.</p>
+        <span class="dur">≈ 3–5 days</span>
+      </div>
+      <div class="step">
+        <span class="step-n">02</span>
+        <h3>Prototype</h3>
+        <p>A clickable Flutter prototype or a playable Godot vertical slice, tested with real users before the full build.</p>
+        <span class="dur">≈ 1–3 weeks</span>
+      </div>
+      <div class="step">
+        <span class="step-n">03</span>
+        <h3>Build</h3>
+        <p>Two-week sprints with a test build every week through TestFlight, Firebase App Distribution or a private web link.</p>
+        <span class="dur">sprint by sprint</span>
+      </div>
+      <div class="step">
+        <span class="step-n">04</span>
+        <h3>Launch &amp; support</h3>
+        <p>Store release, crash and analytics monitoring, then a support plan with agreed response times.</p>
+        <span class="dur">ongoing</span>
+      </div>
+    </div>
+
+    <div class="models">
+      <div class="model">
+        <span class="eyebrow">Option A</span>
+        <h3>Fixed-scope project</h3>
+        <p>A defined product with a fixed price and milestones. Best when requirements are clear.</p>
+        <span class="fit">MVPs · simulators · new apps</span>
+      </div>
+      <div class="model featured">
+        <span class="eyebrow">Option B</span>
+        <h3>Monthly retainer</h3>
+        <p>A reserved block of hours each month for development, updates and support.</p>
+        <span class="fit">Live products · roadmaps</span>
+      </div>
+      <div class="model">
+        <span class="eyebrow">Option C</span>
+        <h3>Technical consulting</h3>
+        <p>Architecture review, AI feasibility checks and code audits for your in-house team.</p>
+        <span class="fit">CTOs · agencies · in-house teams</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section" id="contact" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Contact</span>
+      <h2>Tell me what you're building.</h2>
+      <p>Pick what fits, add a few lines about the project, and send it by email or Telegram. I reply within one business day.</p>
+    </div>
+
+    <div class="contact">
+      <form class="brief" id="brief" novalidate>
+        <h3>Project brief</h3>
+        <fieldset>
+          <legend>What do you need?</legend>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" id="need-flutter" name="need" value="Flutter app" checked><span>Flutter app</span></label>
+            <label class="opt"><input type="checkbox" id="need-sim" name="need" value="Godot simulator"><span>Godot simulator</span></label>
+            <label class="opt"><input type="checkbox" id="need-game" name="need" value="Game"><span>Game</span></label>
+            <label class="opt"><input type="checkbox" id="need-ai" name="need" value="AI integration"><span>AI integration</span></label>
+            <label class="opt"><input type="checkbox" id="need-support" name="need" value="Support of an existing product"><span>Support existing product</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Timeline</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" id="time-asap" name="time" value="As soon as possible"><span>ASAP</span></label>
+            <label class="opt"><input type="radio" id="time-1-3" name="time" value="1–3 months" checked><span>1–3 months</span></label>
+            <label class="opt"><input type="radio" id="time-3plus" name="time" value="3+ months"><span>3+ months</span></label>
+            <label class="opt"><input type="radio" id="time-flex" name="time" value="Flexible"><span>Flexible</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend><label for="brief-text">About the project</label></legend>
+          <textarea id="brief-text" placeholder="Company, who will use it, what problem it solves, any existing systems or deadlines."></textarea>
+        </fieldset>
+        <div class="brief-actions">
+          <button type="submit" class="btn btn-primary" id="brief-copy">Copy brief</button>
+          <span class="toast" id="brief-toast" role="status" aria-live="polite"></span>
+        </div>
+        <p class="note" id="brief-fallback" hidden></p>
+      </form>
+
+      <!-- Placeholder contacts: replace with real ones -->
+      <div class="direct">
+        <div class="channel">
+          <div><span class="eyebrow">Email</span><span class="val" id="c-email">hello@example.com</span></div>
+          <button class="copy" type="button" data-copy="c-email">Copy</button>
+        </div>
+        <div class="channel">
+          <div><span class="eyebrow">Telegram</span><a class="val" href="https://t.me/your_username">@your_username</a></div>
+        </div>
+        <div class="channel">
+          <div><span class="eyebrow">LinkedIn</span><a class="val" href="https://www.linkedin.com/in/your-profile">linkedin.com/in/your-profile</a></div>
+        </div>
+        <div class="channel">
+          <div><span class="eyebrow">GitHub</span><a class="val" href="https://github.com/your-username">github.com/your-username</a></div>
+        </div>
+        <p class="note">NDA on request before the first call. Invoicing in USD or EUR.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Stanislav Kholodov</span>
+    <span>Flutter · Godot · AI integration · Remote, worldwide</span>
+  </div>
+</footer>
+
+<script>
+/* ---------- Hero simulation: AGV fleet following a warehouse route ---------- */
+(function(){
+  const cv = document.getElementById('sim');
+  const ctx = cv.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const C = { grid:'rgba(98,198,224,0.07)', gridMajor:'rgba(98,198,224,0.14)', route:'rgba(98,198,224,0.35)', wp:'#62C6E0', agv:'#FFB443', trail:'255,180,67', shelf:'rgba(231,236,242,0.05)', shelfLine:'rgba(231,236,242,0.10)' };
+  let W=0, H=0;
+  const route = [[.12,.18],[.88,.18],[.88,.82],[.62,.82],[.62,.42],[.38,.42],[.38,.82],[.12,.82]];
+  const shelves = [[.2,.27,.12,.08],[.68,.27,.12,.08],[.2,.55,.1,.2],[.72,.52,.08,.22],[.45,.55,.1,.2]];
+  const N = 28;
+  const agents = [];
+  for(let i=0;i<N;i++){
+    const seg = i % route.length;
+    const a = route[seg], b = route[(seg+1)%route.length];
+    const t = Math.random();
+    agents.push({ nx:a[0]+(b[0]-a[0])*t, ny:a[1]+(b[1]-a[1])*t, x:0, y:0, vx:0, vy:0, i:(seg+1)%route.length, max:1.1+Math.random()*0.9, trail:[] });
+  }
+  let placed = false;
+  function resize(){
+    const r = cv.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio||1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    if(!placed && W>0){ agents.forEach(a=>{ a.x=a.nx*W; a.y=a.ny*H; }); placed = true; }
+  }
+  function P(p){ return [p[0]*W, p[1]*H]; }
+  function step(dt){
+    const k = dt*60;
+    for(const a of agents){
+      const [tx,ty] = P(route[a.i]);
+      let dx = tx-a.x, dy = ty-a.y; const d = Math.hypot(dx,dy)||1;
+      if(d < 14) a.i = (a.i+1) % route.length;
+      let sx = dx/d*a.max - a.vx, sy = dy/d*a.max - a.vy;
+      const sl = Math.hypot(sx,sy); const lim = 0.12;
+      if(sl>lim){ sx=sx/sl*lim; sy=sy/sl*lim; }
+      let px=0, py=0;
+      for(const o of agents){ if(o===a) continue; const ox=a.x-o.x, oy=a.y-o.y; const od=Math.hypot(ox,oy); if(od>0 && od<16){ px+=ox/od*(16-od)*0.02; py+=oy/od*(16-od)*0.02; } }
+      a.vx += (sx+px)*k; a.vy += (sy+py)*k;
+      const v = Math.hypot(a.vx,a.vy); if(v>a.max){ a.vx=a.vx/v*a.max; a.vy=a.vy/v*a.max; }
+      a.x += a.vx*k; a.y += a.vy*k;
+      a.trail.push(a.x,a.y); if(a.trail.length>28) a.trail.splice(0,2);
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const g = 24;
+    ctx.lineWidth = 1;
+    for(let x=0, n=0; x<=W; x+=g, n++){ ctx.strokeStyle = n%4===0?C.gridMajor:C.grid; ctx.beginPath(); ctx.moveTo(x+.5,0); ctx.lineTo(x+.5,H); ctx.stroke(); }
+    for(let y=0, n=0; y<=H; y+=g, n++){ ctx.strokeStyle = n%4===0?C.gridMajor:C.grid; ctx.beginPath(); ctx.moveTo(0,y+.5); ctx.lineTo(W,y+.5); ctx.stroke(); }
+    for(const s of shelves){ ctx.fillStyle=C.shelf; ctx.strokeStyle=C.shelfLine; ctx.fillRect(s[0]*W,s[1]*H,s[2]*W,s[3]*H); ctx.strokeRect(s[0]*W+.5,s[1]*H+.5,s[2]*W,s[3]*H); }
+    ctx.setLineDash([4,6]); ctx.strokeStyle = C.route; ctx.beginPath();
+    route.forEach((p,i)=>{ const [x,y]=P(p); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = C.wp;
+    for(const p of route){ const [x,y]=P(p); ctx.beginPath(); ctx.moveTo(x,y-5); ctx.lineTo(x+5,y); ctx.lineTo(x,y+5); ctx.lineTo(x-5,y); ctx.closePath(); ctx.fill(); }
+    for(const a of agents){
+      const t = a.trail;
+      for(let j=2;j<t.length;j+=2){ ctx.strokeStyle = 'rgba('+C.trail+','+(j/t.length*0.35).toFixed(3)+')'; ctx.beginPath(); ctx.moveTo(t[j-2],t[j-1]); ctx.lineTo(t[j],t[j+1]); ctx.stroke(); }
+      const ang = Math.atan2(a.vy,a.vx);
+      ctx.save(); ctx.translate(a.x,a.y); ctx.rotate(ang);
+      ctx.fillStyle = C.agv; ctx.fillRect(-6,-4,12,8);
+      ctx.fillStyle = 'rgba(10,14,19,0.85)'; ctx.fillRect(2,-2.5,3,5);
+      ctx.restore();
+    }
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  const fpsEl = document.getElementById('hud-fps'), msEl = document.getElementById('hud-ms');
+  if(reduce){ for(let i=0;i<240;i++) step(1/60); draw(); return; }
+  let last = performance.now(), acc = 0, frames = 0, visible = true;
+  if('IntersectionObserver' in window){ new IntersectionObserver(e=>{ visible = e[0].isIntersecting; if(visible){ last=performance.now(); requestAnimationFrame(loop);} }).observe(cv); }
+  function loop(now){
+    if(!visible) return;
+    const dt = Math.min((now-last)/1000, 1/20); last = now;
+    step(dt); draw();
+    acc += dt; frames++;
+    if(acc >= .5){ const fps = frames/acc; fpsEl.textContent = Math.round(fps); msEl.textContent = (1000/fps).toFixed(1); acc = 0; frames = 0; }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- Copy helpers ---------- */
+function copyText(text, onOk, onFail){
+  try{
+    navigator.clipboard.writeText(text).then(onOk, onFail);
+  }catch(e){ onFail(); }
+}
+document.querySelectorAll('[data-copy]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const el = document.getElementById(btn.dataset.copy);
+    const text = el.textContent.trim();
+    copyText(text, ()=>{ btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1600); }, ()=>{
+      const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent='Selected';  setTimeout(()=>btn.textContent='Copy',1600);
     });
-  </script>
+  });
+});
+
+/* ---------- Brief builder ---------- */
+document.getElementById('brief').addEventListener('submit', e=>{
+  e.preventDefault();
+  const needs = [...document.querySelectorAll('input[name="need"]:checked')].map(i=>i.value);
+  const time = (document.querySelector('input[name="time"]:checked')||{}).value || 'Not set';
+  const about = document.getElementById('brief-text').value.trim() || '(add a few lines about the project)';
+  const text = 'Hi Stanislav,\n\nNeed: ' + (needs.join(', ') || 'Not sure yet') + '\nTimeline: ' + time + '\n\nAbout the project:\n' + about + '\n';
+  const toast = document.getElementById('brief-toast');
+  const fb = document.getElementById('brief-fallback');
+  copyText(text, ()=>{
+    fb.hidden = true;
+    toast.textContent = 'Brief copied. Paste it into an email or Telegram message.';
+  }, ()=>{
+    toast.textContent = '';
+    fb.hidden = false;
+    fb.style.whiteSpace = 'pre-wrap';
+    fb.textContent = text;
+    const r = document.createRange(); r.selectNodeContents(fb); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  });
+});
+</script>
 </body>
 </html>
