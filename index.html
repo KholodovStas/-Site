@@ -240,6 +240,8 @@ textarea:focus{outline:none;border-color:var(--accent)}
 /* ---------- Footer ---------- */
 footer{border-top:1px solid var(--line)}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:28px;font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+footer a{color:var(--muted);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line)}
+footer a:hover{color:var(--accent)}
 </style>
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -525,7 +527,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <!-- Placeholder contacts: replace with real ones -->
       <div class="direct">
         <div class="channel">
-          <div><span class="eyebrow">Email</span><span class="val" id="c-email">hello@example.com</span></div>
+          <div><span class="eyebrow">Email</span><span class="val" id="c-email">support_HolodStudio@proton.me</span></div>
           <button class="copy" type="button" data-copy="c-email">Copy</button>
         </div>
         <div class="channel">
@@ -546,7 +548,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Stanislav Kholodov</span>
+    <span>© 2026 Stanislav Kholodov · <a href="privacy.html">Privacy Policy</a></span>
     <span>Flutter · Godot · AI integration · Remote, worldwide</span>
   </div>
 </footer>
